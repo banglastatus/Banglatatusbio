@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>বাংলা স্টাটাস বায়ো — Status + Bio + Caption</title>
+  <meta name="description" content="বাংলা স্ট্যাটাস, বায়ো আর ক্যাপশন—সব একসাথে! এক ক্লিকে কপি, ট্রেন্ডিং টপ ১০, ডার্ক মোড, ফেভারিট, আর ইউজার সাবমিশন।" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b1220;        /* dark background default */
+      --card:#111927;
+      --text:#e6edf3;
+      --muted:#8aa0b6;
+      --brand:#22d3ee;      /* cyan */
+      --accent:#a78bfa;     /* violet */
+      --ok:#10b981;         /* green */
+      --warn:#f59e0b;       /* amber */
+      --danger:#ef4444;     /* red */
+      --ring:rgba(34,211,238,.35);
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#0b1220;
+      --muted:#53657a;
+      --brand:#0ea5e9;
+      --accent:#7c3aed;
+      --ok:#059669;
+      --warn:#d97706;
+      --danger:#dc2626;
+      --ring:rgba(14,165,233,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Noto Sans Bengali",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",Arial,"Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    header{
+      position:relative;
+      padding:32px 0 24px;
+    }
+    #bg-canvas{
+      position:absolute; inset: -50px 0 auto 0; height:320px; width:100%;
+      z-index:0; pointer-events:none;
+    }
+    .hero{
+      position:relative; z-index:1;
+      display:flex; align-items:center; gap:16px; justify-content:space-between; flex-wrap:wrap;
+    }
+    .logo{
+      display:flex; align-items:center; gap:14px; text-decoration:none;
+    }
+    .logo svg{width:44px;height:44px;filter:drop-shadow(0 6px 14px rgba(34,211,238,.3))}
+    .brand{
+      font-weight:800; letter-spacing:.2px; line-height:1.1;
+      font-size: clamp(22px, 3.2vw, 32px);
+      background: linear-gradient(90deg,var(--brand),var(--accent));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .searchbar{
+      display:flex; align-items:center; gap:10px;
+      background:var(--card); border:1px solid rgba(255,255,255,.08);
+      padding:10px 12px; border-radius:14px; width:min(520px,100%);
+      box-shadow: 0 6px 20px rgba(0,0,0,.15);
+    }
+    .searchbar input{
+      flex:1; border:0; outline:0; background:transparent; color:var(--text);
+      font-size:16px;
+    }
+    .btn{
+      appearance:none; border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.06));
+      padding:10px 14px; border-radius:12px; color:var(--text);
+      cursor:pointer; transition:.2s transform, .2s box-shadow, .2s opacity;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+    .btn:active{transform:translateY(0)}
+    .btn.primary{border-color:transparent;background:linear-gradient(90deg,var(--brand),var(--accent)); color:#08111d; font-weight:700}
+    .btn.ghost{background:transparent}
+    .toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:18px 0}
+    .chip{
+      border:1px solid rgba(255,255,255,.12);
+      padding:8px 12px; border-radius:999px; cursor:pointer; font-size:14px;
+      background:var(--card); color:var(--text); transition:.2s;
+    }
+    .chip.active, .chip:hover{border-color:var(--ring); box-shadow:0 0 0 4px var(--ring)}
+    .grid{
+      display:grid; gap:14px; grid-template-columns: repeat( auto-fill, minmax(250px, 1fr) );
+    }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px; padding:14px 14px 12px;
+      display:flex; flex-direction:column; gap:12px;
+      position:relative; overflow:hidden;
+    }
+    .meta{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px}
+    .line{font-size:16px; line-height:1.5}
+    .actions{display:flex; gap:8px; align-items:center; justify-content:space-between}
+    .left-actions{display:flex; gap:8px}
+    .tag{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.12); color:var(--muted)}
+    .copy{border-color:rgba(34,211,238,.35)}
+    .fav-btn.active{border-color:rgba(244,114,182,.45)}
+    .section-title{
+      margin:26px 0 12px; font-weight:800; letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-title .small{font-size:13px; color:var(--muted); font-weight:600}
+    .list-empty{color:var(--muted); text-align:center; padding:20px 12px}
+    footer{opacity:.7; font-size:13px; text-align:center; padding:32px 0}
+    /* Modal */
+    .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:60}
+    .modal{width:min(560px,92vw); background:var(--card); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:16px}
+    .modal h3{margin:0 0 12px}
+    .field{display:flex; flex-direction:column; gap:6px; margin:10px 0}
+    .field input,.field textarea,.field select{
+      width:100%; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+      background:transparent; color:var(--text); outline: none;
+    }
+    .modal-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:10px}
+    /* Toast */
+    .toast{position:fixed; right:16px; bottom:16px; background:var(--card); border:1px solid rgba(255,255,255,.12); padding:10px 14px; border-radius:12px; z-index:70; display:none}
+    /* Responsive tweaks */
+    @media (max-width:520px){
+      .hero{justify-content:center; text-align:center}
+      .toolbar{justify-content:center}
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <!-- Three.js background -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <header>
+    <div class="container hero">
+      <a class="logo" href="#">
+        <!-- SVG LOGO -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Bangla Status Bio Logo">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="#22d3ee"/>
+              <stop offset="1" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g)"></rect>
+          <path d="M18 36c6 6 22 6 28 0M18 24c6 6 22 6 28 0" stroke="#08111d" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="3" fill="#08111d"/>
+          <circle cx="42" cy="42" r="3" fill="#08111d"/>
+        </svg>
+        <div>
+          <div class="brand">বাংলা স্টাটাস বায়ো</div>
+          <div style="font-size:12px;color:var(--muted)">Status • Bio • Caption — একসাথে</div>
+        </div>
+      </a>
+
+      <div class="toolbar">
+        <button id="themeToggle" class="btn ghost" title="ডার্ক/লাইট">🌓</button>
+        <button id="openSubmit" class="btn">✍️ সাবমিট করুন</button>
+        <a class="btn primary" href="#trending">🔥 আজকের টপ ১০</a>
+      </div>
+
+      <div class="searchbar" style="flex:1 1 100%; margin-top:14px;">
+        🔎
+        <input id="searchInput" type="search" placeholder="স্ট্যাটাস / বায়ো / ক্যাপশন খুঁজুন..." autocomplete="off" />
+        <button id="clearSearch" class="btn ghost" title="ক্লিয়ার">❌</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Category Tabs -->
+    <div class="tabs" id="typeTabs" role="tablist" aria-label="ধরন নির্বাচন">
+      <button class="chip active" data-type="all">সব</button>
+      <button class="chip" data-type="status">স্ট্যাটাস</button>
+      <button class="chip" data-type="bio">বায়ো</button>
+      <button class="chip" data-type="caption">ক্যাপশন</button>
+    </div>
+
+    <!-- Subcategory Chips -->
+    <div class="tabs" id="subTabs" role="tablist" aria-label="ক্যাটাগরি নির্বাচন">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Random Suggestion -->
+    <div class="section-title">
+      <h2 style="margin:0">🎲 আজকের সাজেশন</h2>
+      <span class="small" id="suggestMeta"></span>
+    </div>
+    <div id="suggestion" class="card"></div>
+
+    <!-- Trending -->
+    <div class="section-title" id="trending">
+      <h2 style="margin:0">🔥 আজকের টপ ১০</h2>
+      <span class="small">(কপি/ফেভারিটের ভিত্তিতে)</span>
+    </div>
+    <div id="trendingGrid" class="grid"></div>
+
+    <!-- All Items -->
+    <div class="section-title">
+      <h2 style="margin:0">📚 সকল লাইন</h2>
+      <span class="small" id="resultMeta"></span>
+    </div>
+    <div id="itemsGrid" class="grid"></div>
+
+    <div id="emptyState" class="list-empty" style="display:none">কিছু পাওয়া যায়নি। সার্চ বা ক্যাটাগরি পরিবর্তন করে দেখুন।</div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> বাংলা স্টাটাস বায়ো • All Rights Reserved
+  </footer>
+
+  <!-- Submit Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h3 id="modalTitle">✍️ আপনার লেখা সাবমিট করুন</h3>
+      <div class="field">
+        <label>ধরন নির্বাচন</label>
+        <select id="fType">
+          <option value="status">স্ট্যাটাস</option>
+          <option value="bio">বায়ো</option>
+          <option value="caption">ক্যাপশন</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>ক্যাটাগরি</label>
+        <select id="fCat">
+          <option>Love</option>
+          <option>Sad</option>
+          <option>Friendship</option>
+          <option>Attitude</option>
+          <option>Islamic</option>
+          <option>Funny</option>
+          <option>Travel</option>
+          <option>Motivational</option>
+          <option>Selfie</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>বাংলা টেক্সট</label>
+        <textarea id="fText" rows="4" placeholder="এখানে আপনার স্ট্যাটাস/বায়ো/ক্যাপশন লিখুন..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="closeSubmit">বন্ধ করুন</button>
+        <button class="btn primary" id="saveSubmit">সেভ করুন</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px">
+        নোট: আপনার সাবমিশন এই ব্রাউজারের মধ্যে (LocalStorage) সেভ হবে।
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">কপি হয়েছে ✅</div>
+
+  <!-- Three.js CDN -->
+  <script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+
+  <script>
+    /**********************
+     * Data & Utilities
+     **********************/
+    const NOW = new Date();
+    document.getElementById('year').textContent = NOW.getFullYear();
+
+    // Base dataset (you can expand anytime)
+    const BASE = [
+      // STATUS
+      {id:'s1', type:'status', cat:'Love', text:'তুমি থাকলে পৃথিবীটা একটু বেশি রঙিন লাগে।'},
+      {id:'s2', type:'status', cat:'Sad', text:'কথা কমলে মানুষ চুপ থাকে, ভালোবাসা কমলে হৃদয়।'},
+      {id:'s3', type:'status', cat:'Friendship', text:'বন্ধু মানে দূরত্বে থেকেও পাশে থাকার নাম।'},
+      {id:'s4', type:'status', cat:'Attitude', text:'আমি আলাদা, তুলনা করতে এনার্জি নষ্ট কোরো না।'},
+      {id:'s5', type:'status', cat:'Islamic', text:'আল্লাহ যে নেয়, তার থেকেও ভালোটা দিয়ে দেয়। ইনশাআল্লাহ।'},
+      {id:'s6', type:'status', cat:'Funny', text:'ঘুমের সাথে আমার রিলেশন সিরিয়াস লেভেলে। 😴'},
+      // BIO
+      {id:'b1', type:'bio', cat:'Attitude', text:'নিজের রুলস, নিজের রাস্তায় — 🚀'},
+      {id:'b2', type:'bio', cat:'Love', text:'হৃদয়ে তুমি, লিস্টে পরিবার ❤️'},
+      {id:'b3', type:'bio', cat:'Short', text:'Dream • Do • Repeat'},
+      {id:'b4', type:'bio', cat:'Islamic', text:'আলহামদুলিল্লাহ for Everything'},
+      {id:'b5', type:'bio', cat:'Funny', text:'খাই-দাই-ঘুমাই অফিসিয়াল 😅'},
+      // CAPTION
+      {id:'c1', type:'caption', cat:'Selfie', text:'ক্যামেরা অন, attitude on 🔥'},
+      {id:'c2', type:'caption', cat:'Travel', text:'পথে পথে গল্প, মানচিত্রে স্মৃতি।'},
+      {id:'c3', type:'caption', cat:'Motivational', text:'ধীর গতিও গতি — থামবে না।'},
+      {id:'c4', type:'caption', cat:'Sad', text:'হাসির আড়ালে জমে থাকা বৃষ্টি।'},
+      {id:'c5', type:'caption', cat:'Love', text:'তোমার সাথে সময়টা একটু বেশিই দ্রুত যায়।'},
+    ];
+
+    // Subcategories by type
+    const SUB_MAP = {
+      status: ['Love','Sad','Friendship','Attitude','Islamic','Funny'],
+      bio: ['Instagram','Facebook','WhatsApp','Attitude','Romantic','Short','Islamic','Funny'],
+      caption: ['Love','Travel','Selfie','Sad','Motivational','Funny']
+    };
+
+    // Persistence keys
+    const LS_KEY_USER = 'bsb_user_items_v1';
+    const LS_KEY_STATS = 'bsb_usage_stats_v1';
+    const LS_KEY_THEME = 'bsb_theme_v1';
+
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+
+    // State
+    let STATE = {
+      q: '',
+      type: 'all',
+      sub: 'all',
+      items: [...BASE, ...loadUserItems()],
+      stats: loadStats(), // { [id]: {copy: number, fav: 0/1, scoreByDay: {'YYYY-MM-DD':number}} }
+    };
+
+    function todayKey(d=new Date()){
+      const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${dd}`;
+    }
+
+    function loadUserItems(){
+      try{ return JSON.parse(localStorage.getItem(LS_KEY_USER) || '[]'); }catch{ return [] }
+    }
+    function saveUserItems(items){
+      localStorage.setItem(LS_KEY_USER, JSON.stringify(items));
+    }
+
+    function loadStats(){
+      try{ return JSON.parse(localStorage.getItem(LS_KEY_STATS) || '{}'); }catch{ return {} }
+    }
+    function saveStats(){
+      localStorage.setItem(LS_KEY_STATS, JSON.stringify(STATE.stats));
+    }
+
+    function incMetric(id, delta=1){
+      const t=todayKey();
+      if(!STATE.stats[id]) STATE.stats[id]={copy:0,fav:0, scoreByDay:{}};
+      STATE.stats[id].copy += delta;
+      STATE.stats[id].scoreByDay[t]=(STATE.stats[id].scoreByDay[t]||0)+delta;
+      saveStats();
+      render();
+    }
+    function toggleFav(id){
+      if(!STATE.stats[id]) STATE.stats[id]={copy:0,fav:0, scoreByDay:{}};
+      STATE.stats[id].fav = STATE.stats[id].fav?0:1;
+      // small score for fav toggle
+      const t=todayKey(); STATE.stats[id].scoreByDay[t]=(STATE.stats[id].scoreByDay[t]||0)+ (STATE.stats[id].fav?2:-2);
+      saveStats();
+      render();
+    }
+
+    /**********************
+     * Rendering helpers
+     **********************/
+    const subTabs = $('#subTabs');
+    function renderSubTabs(){
+      const subs = STATE.type==='all' ? [...new Set([].concat(...Object.values(SUB_MAP)))] : SUB_MAP[STATE.type] || [];
+      subTabs.innerHTML='';
+      const allBtn = chip('সব', 'all', STATE.sub==='all', v => { STATE.sub=v; render(); });
+      subTabs.appendChild(allBtn);
+      subs.forEach(s=>{
+        const btn = chip(s, s, STATE.sub===s, v=>{ STATE.sub=v; render(); });
+        subTabs.appendChild(btn);
+      });
+    }
+    function chip(label, value, active, onClick){
+      const b=document.createElement('button');
+      b.className = 'chip'+(active?' active':'');
+      b.textContent = label;
+      b.dataset.value=value;
+      b.onclick=()=>onClick(value);
+      return b;
+    }
+
+    function copyToClipboard(text){
+      navigator.clipboard.writeText(text).then(()=>{
+        showToast('কপি হয়েছে ✅');
+      }).catch(()=>{
+        // fallback
+        const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); ta.remove();
+        showToast('কপি হয়েছে ✅');
+      });
+    }
+    function showToast(msg){
+      const t=$('#toast'); t.textContent=msg; t.style.display='block';
+      clearTimeout(showToast._h); showToast._h=setTimeout(()=>t.style.display='none',1800);
+    }
+
+    function cardTemplate(item){
+      const st = STATE.stats[item.id] || {copy:0,fav:0};
+      const wrap=document.createElement('div'); wrap.className='card'; wrap.setAttribute('data-id', item.id);
+      const tag = `<span class="tag">#${item.type} • ${item.cat}</span>`;
+      wrap.innerHTML = `
+        <div class="meta">${tag}</div>
+        <div class="line">${escapeHTML(item.text)}</div>
+        <div class="actions">
+          <div class="left-actions">
+            <button class="btn copy" title="কপি করুন">📋 কপি</button>
+            <button class="btn ghost fav-btn ${st.fav?'active':''}" title="ফেভারিট">💗 ফেভ</button>
+          </div>
+          <div class="meta">কপি: ${st.copy}</div>
+        </div>
+      `;
+      wrap.querySelector('.copy').onclick=()=>{ copyToClipboard(item.text); incMetric(item.id, 1); };
+      wrap.querySelector('.fav-btn').onclick=()=> toggleFav(item.id);
+      return wrap;
+    }
+
+    function escapeHTML(s){
+      return s.replace(/[&<>]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    }
+
+    function filterItems(){
+      const q=STATE.q.trim().toLowerCase();
+      return STATE.items.filter(it=>{
+        if(STATE.type!=='all' && it.type!==STATE.type) return false;
+        if(STATE.sub!=='all' && it.cat!==STATE.sub) return false;
+        if(!q) return true;
+        return (it.text.toLowerCase().includes(q) || it.cat.toLowerCase().includes(q));
+      });
+    }
+
+    function renderSuggestion(list){
+      const elem = $('#suggestion'); elem.innerHTML='';
+      if(!list.length){ elem.innerHTML='<div class="list-empty">সাজেশন তৈরি করা যায়নি।</div>'; return; }
+      const pick = list[Math.floor(Math.random()*list.length)];
+      $('#suggestMeta').textContent = `#${pick.type} • ${pick.cat}`;
+      elem.appendChild(cardTemplate(pick));
+    }
+
+    function renderTrending(){
+      const grid = $('#trendingGrid'); grid.innerHTML='';
+      const day = todayKey();
+      // compute score for today
+      const scored = STATE.items.map(it=>{
+        const st=STATE.stats[it.id]; const s = st?.scoreByDay?.[day]||0;
+        return {item:it, score:s};
+      }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10);
+      if(!scored.length){
+        grid.innerHTML = `<div class="list-empty">আজকের ট্রেন্ডিং শূন্য। কপি/ফেভারিট করলে এখানে দেখাবে।</div>`;
+        return;
+      }
+      scored.forEach(({item})=> grid.appendChild(cardTemplate(item)));
+    }
+
+    function renderList(){
+      const list = filterItems();
+      const grid = $('#itemsGrid'); grid.innerHTML='';
+      $('#resultMeta').textContent = `${list.length}টি ফলাফল`;
+      if(!list.length){ $('#emptyState').style.display='block'; return; }
+      $('#emptyState').style.display='none';
+      list.forEach(it=> grid.appendChild(cardTemplate(it)));
+      return list;
+    }
+
+    function render(){
+      renderSubTabs();
+      const list = renderList();
+      renderSuggestion(list.length?list:STATE.items);
+      renderTrending();
+    }
+
+    /**********************
+     * Events & init
+     **********************/
+    // Tabs
+    $$('#typeTabs .chip').forEach(btn=>{
+      btn.onclick=()=>{
+        $$('#typeTabs .chip').forEach(x=>x.classList.remove('active'));
+        btn.classList.add('active');
+        STATE.type = btn.dataset.type;
+        STATE.sub = 'all';
+        render();
+      };
+    });
+
+    // Search
+    const searchInput = $('#searchInput');
+    const clearSearch = $('#clearSearch');
+    let deb;
+    searchInput.addEventListener('input', ()=>{
+      clearTimeout(deb);
+      deb=setTimeout(()=>{ STATE.q=searchInput.value; render(); }, 180);
+    });
+    clearSearch.onclick=()=>{ searchInput.value=''; STATE.q=''; render(); };
+
+    // Submit modal
+    const modalBackdrop=$('#modalBackdrop');
+    $('#openSubmit').onclick=()=> modalBackdrop.style.display='flex';
+    $('#closeSubmit').onclick=()=> modalBackdrop.style.display='none';
+    $('#saveSubmit').onclick=()=>{
+      const type = $('#fType').value;
+      const cat  = $('#fCat').value;
+      const text = ($('#fText').value||'').trim();
+      if(text.length<4){ showToast('আরো কিছু লিখুন 🙂'); return; }
+      const userItems = loadUserItems();
+      const id = 'u_'+Date.now();
+      const rec = {id, type, cat, text};
+      userItems.unshift(rec);
+      saveUserItems(userItems);
+      STATE.items = [...BASE, ...userItems];
+      $('#fText').value='';
+      modalBackdrop.style.display='none';
+      showToast('সেভ হয়েছে ✅');
+      render();
+    };
+
+    // Theme
+    (function initTheme(){
+      const saved = localStorage.getItem(LS_KEY_THEME);
+      if(saved) document.body.setAttribute('data-theme', saved);
+      $('#themeToggle').onclick=()=>{
+        const cur = document.body.getAttribute('data-theme')==='light'?'dark':'light';
+        document.body.setAttribute('data-theme', cur);
+        localStorage.setItem(LS_KEY_THEME, cur);
+      };
+    })();
+
+    // Initial paint
+    render();
+
+    /**********************
+     * Three.js Background
+     **********************/
+    ;(function initThree(){
+      const canvas = document.getElementById('bg-canvas');
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, window.innerWidth/320, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+      function resize(){
+        const w = window.innerWidth, h = 320;
+        renderer.setSize(w, h, false);
+        camera.aspect = w/h; camera.updateProjectionMatrix();
+      }
+      resize(); window.addEventListener('resize', resize);
+
+      const geom = new THREE.PlaneGeometry(16, 8, 48, 16);
+      const mat  = new THREE.MeshBasicMaterial({color:0x0f172a, wireframe:true, transparent:true, opacity:.35});
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.rotation.x = -0.9; mesh.position.z = -6; mesh.position.y = -1.2;
+      scene.add(mesh);
+
+      const clock = new THREE.Clock();
+      function animate(){
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        const pos = geom.attributes.position;
+        for(let i=0;i<pos.count;i++){
+          const x=pos.getX(i), y=pos.getY(i);
+          const z = Math.sin(x*1.2 + t*.8) * Math.cos(y*1.3 - t*.6) * 0.35;
+          pos.setZ(i, z);
+        }
+        pos.needsUpdate = true;
+        mesh.rotation.z = Math.sin(t*.08)*.03;
+        renderer.render(scene, camera);
+      }
+      animate();
+    })();
+  </script>
+
+  <!-- Optional PHP endpoint (same file) for future server use
+       Rename file to index.php to enable on PHP server
+  <?php
+  /*
+    // Example: handle POST to save submissions to a flat file (if you deploy on PHP)
+    if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['text'])){
+      $rec = [
+        'type' => $_POST['type'] ?? 'status',
+        'cat'  => $_POST['cat'] ?? 'Misc',
+        'text' => $_POST['text'] ?? ''
+      ];
+      file_put_contents(__DIR__.'/submissions.json', json_encode($rec, JSON_UNESCAPED_UNICODE).PHP_EOL, FILE_APPEND);
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['ok'=>true]);
+      exit;
+    }
+  */
+  ?>
+  -->
+</body>
+</html>
